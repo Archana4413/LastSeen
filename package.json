@@ -1,0 +1,26 @@
+{
+  "name": "last-seen-memory-website",
+  "version": "1.0.0",
+  "description": "Last Seen - A Personal Lost-Item Memory Website with smart location suggestions",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "lost-and-found",
+    "item-tracker",
+    "smart-memory",
+    "last-seen"
+  ],
+  "author": "TraceMates (Archana BS & Gedila Bimala) - RV University",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <circle cx="40" cy="40" r="38" fill="#FCE7F3"/>
+  <!-- Wallet Body -->
+  <rect x="20" y="26" width="40" height="28" rx="4" fill="#9D174D"/>
+  <rect x="20" y="30" width="40" height="24" rx="3" fill="#BE185D"/>
+  <!-- Flap -->
+  <path d="M42 34H58C59.1046 34 60 34.8954 60 36V44C60 45.1046 59.1046 46 58 46H42C40.8954 46 40 45.1046 40 44V36C40 34.8954 40.8954 34 42 34Z" fill="#F472B6"/>
+  <circle cx="53" cy="40" r="2.5" fill="#FFFFFF"/>
+</svg>

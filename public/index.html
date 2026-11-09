@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Last Seen – A Personal Lost-Item Memory Website</title>
+  <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS for Campus Map (as featured in assignment Page 6) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Site Header / Navbar -->
+  <header class="site-header">
+    <div class="container header-container">
+      <div class="brand" onclick="navigateTo('home')">
+        <img src="/images/logo.svg" alt="Last Seen Logo" class="brand-icon">
+        <span>Last Seen</span>
+      </div>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a class="nav-link active" data-nav="home" onclick="navigateTo('home')">Home</a></li>
+          <li><a class="nav-link" data-nav="items" onclick="navigateTo('items')">My Items</a></li>
+          <li><a class="nav-link" data-nav="add" onclick="navigateTo('add')">Add Item</a></li>
+          <li><a class="nav-link" data-nav="history" onclick="navigateTo('history')">Location History</a></li>
+          <li><a class="nav-link" data-nav="smart-finder" onclick="navigateTo('smart-finder')">Where to Look?</a></li>
+          <li><a class="nav-link" data-nav="insights" onclick="navigateTo('insights')">Insights</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn-ip-info" onclick="openIpModal()" title="View Academic IP Assignment Details">
+          <span>📜 IP Project Info</span>
+        </button>
+        <button class="avatar-btn" onclick="openProfileModal()" title="TraceMates Profile">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= VIEW 1: HOME ================= -->
+  <main>
+    <section id="view-home" class="app-view active">
+      <div class="hero-section">
+        <div class="container">
+          <div class="hero-grid">
+            <div class="hero-content">
+              <div class="hero-eyebrow">KEEP TRACK. FIND FASTER.</div>
+              <h1 class="hero-title">Find What<br>Matters</h1>
+              <p class="hero-desc">
+                Track your belongings, check their last seen location and get smart suggestions on where to look first.
+              </p>
+              <div class="hero-actions">
+                <button class="btn btn-primary" onclick="navigateTo('items')">
+                  <span>Get Started</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+                <button class="btn btn-secondary" onclick="navigateTo('smart-finder')">
+                  <span>🔍 Where Should I Look?</span>
+                </button>
+                <button class="btn btn-secondary" onclick="navigateTo('add')">
+                  <span>+ Add New Item</span>
+                </button>
+              </div>
+            </div>
+            <div class="hero-image-wrapper">
+              <img src="/images/hero-scene.svg" alt="Workspace items last seen memory visualization">
+            </div>
+          </div>
+
+          <!-- 3 Feature Pillars from Page 5 -->
+          <div class="features-pillars">
+            <div class="feature-pill">
+              <div class="feature-icon-box">📍</div>
+              <div class="feature-text">
+                <h4>Track Items</h4>
+                <p>View last seen location, notes, and exact timestamp records.</p>
+              </div>
+            </div>
+            <div class="feature-pill">
+              <div class="feature-icon-box">💡</div>
+              <div class="feature-text">
+                <h4>Smart Suggestions</h4>
+                <p>Get data-driven ideas and probability on where to look first.</p>
+              </div>
+            </div>
+            <div class="feature-pill">
+              <div class="feature-icon-box">🛡️</div>
+              <div class="feature-text">
+                <h4>Stay Organized</h4>
+                <p>Keep your belongings safe across campus, home, and commute.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Recent Overview on Home -->
+      <div class="container" style="padding-top: 50px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+          <div>
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--secondary);">Recently Tracked Items</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Your personal belongings currently monitored by Last Seen</p>
+          </div>
+          <button class="btn btn-secondary" onclick="navigateTo('items')">View All Items →</button>
+        </div>
+        <div class="items-grid" id="home-recent-items-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 2: MY ITEMS ================= -->
+    <section id="view-items" class="app-view">
+      <div class="container">
+        <div class="view-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h1 class="view-title">My Items</h1>
+            <p class="view-subtitle">Manage, track, and update your personal items and their recorded spots.</p>
+          </div>
+          <button class="btn btn-primary" onclick="navigateTo('add')">+ Add New Item</button>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="filter-bar">
+          <div class="search-box">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="items-search-input" class="search-input" placeholder="Search by name, notes, or location (e.g. keys, library)..." oninput="debounceFetchItems()">
+          </div>
+
+          <div class="filter-controls">
+            <select id="items-category-filter" class="filter-select" onchange="fetchItems()">
+              <option value="All">All Categories</option>
+              <option value="Keys & Keychains">Keys & Keychains</option>
+              <option value="Electronics & Laptops">Electronics & Laptops</option>
+              <option value="Wallets & Purses">Wallets & Purses</option>
+              <option value="Audio & Earphones">Audio & Earphones</option>
+              <option value="ID Cards & Documents">ID Cards & Documents</option>
+              <option value="Books & Notebooks">Books & Notebooks</option>
+              <option value="Bags & Backpacks">Bags & Backpacks</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <div class="status-tabs">
+              <button class="status-tab active" data-status="all" onclick="setStatusFilter('all')">All</button>
+              <button class="status-tab" data-status="missing" onclick="setStatusFilter('missing')">Missing</button>
+              <button class="status-tab" data-status="found" onclick="setStatusFilter('found')">Found</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Cards Grid -->
+        <div class="items-grid" id="items-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: ADD ITEM (Faithful to Page 6) ================= -->
+    <section id="view-add" class="app-view">
+      <div class="container">
+        <div class="add-item-card">
+          <div class="view-header" style="margin-bottom: 24px;">
+            <h1 class="view-title">Add New Item</h1>
+            <p class="view-subtitle">Keep track of your belongings by adding a new item.</p>
+          </div>
+
+          <form id="add-item-form" onsubmit="handleAddItemSubmit(event)">
+            <div class="form-grid">
+              <!-- Left Column: Inputs -->
+              <div class="form-inputs-col">
+                <div class="form-group">
+                  <label class="form-label" for="item-name">Item Name *</label>
+                  <input type="text" id="item-name" class="form-input" placeholder="e.g. Laptop, Keys, Wallet" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="item-category">Category *</label>
+                  <select id="item-category" class="form-select" required>
+                    <option value="" disabled selected>Select category</option>
+                    <option value="Keys & Keychains">Keys & Keychains</option>
+                    <option value="Electronics & Laptops">Electronics & Laptops</option>
+                    <option value="Wallets & Purses">Wallets & Purses</option>
+                    <option value="Audio & Earphones">Audio & Earphones</option>
+                    <option value="ID Cards & Documents">ID Cards & Documents</option>
+                    <option value="Books & Notebooks">Books & Notebooks</option>
+                    <option value="Bags & Backpacks">Bags & Backpacks</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="item-location">Last Seen Location (optional)</label>
+                  <input type="text" id="item-location" class="form-input" placeholder="e.g. Library, Classroom, Hostel">
+                  <div class="quick-locations">
+                    <span style="font-size: 0.75rem; color: var(--text-muted); align-self: center;">Quick pick:</span>
+                    <button type="button" class="location-chip" onclick="setAddLocation('Classroom')">Classroom</button>
+                    <button type="button" class="location-chip" onclick="setAddLocation('Library')">Library</button>
+                    <button type="button" class="location-chip" onclick="setAddLocation('Cafeteria')">Cafeteria</button>
+                    <button type="button" class="location-chip" onclick="setAddLocation('Hostel')">Hostel</button>
+                    <button type="button" class="location-chip" onclick="setAddLocation('Home / Off-Campus')">Home</button>
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                  <div class="form-group">
+                    <label class="form-label" for="item-date">Date</label>
+                    <input type="date" id="item-date" class="form-input">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="item-time">Time</label>
+                    <input type="time" id="item-time" class="form-input">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="item-notes">Notes (optional)</label>
+                  <textarea id="item-notes" class="form-textarea" rows="3" placeholder="e.g. colour, brand, other details"></textarea>
+                </div>
+              </div>
+
+              <!-- Right Column: Upload Box (Faithful to Page 6) -->
+              <div class="form-upload-col">
+                <label class="form-label">Upload Image (optional)</label>
+                <div class="upload-box" id="drop-upload-box" onclick="document.getElementById('file-upload-input').click()">
+                  <svg class="upload-icon-graphic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                  <div class="upload-title">Choose File</div>
+                  <div class="upload-subtitle">Add a photo to identify your item more easily</div>
+                  <span class="btn-choose-file">Select Image</span>
+                  <input type="file" id="file-upload-input" accept="image/*" style="display: none;" onchange="handleImageSelection(event)">
+                </div>
+
+                <div class="preview-container" id="image-preview-container">
+                  <img id="image-preview" class="preview-image" src="" alt="Item Preview">
+                  <button type="button" class="btn-remove-preview" onclick="removeImagePreview(event)">✕</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Buttons (Faithful to Page 6) -->
+            <div class="form-actions-row">
+              <button type="submit" class="btn btn-primary" id="btn-save-item">Save Item</button>
+            </div>
+            <div style="margin-top: 18px;">
+              <a class="btn-back-home" onclick="navigateTo('home')">← Back to Home</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 4: LOCATION HISTORY (Faithful to Page 6) ================= -->
+    <section id="view-history" class="app-view">
+      <div class="container">
+        <div class="view-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h1 class="view-title">Location History</h1>
+            <p class="view-subtitle">Track where your item was last seen.</p>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <select id="history-item-filter" class="filter-select" onchange="fetchHistory()">
+              <option value="">All Items History</option>
+            </select>
+            <button class="btn btn-secondary" onclick="useCurrentGpsLocation()" title="Use Device Geolocation">
+              <span>📍 My Current GPS</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="history-layout">
+          <!-- Left: Timeline List of previous records -->
+          <div class="history-timeline-panel">
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--secondary); margin-bottom: 4px;">Recent Movements & Spots</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">Chronological record of where items were placed</p>
+            <div class="timeline-list" id="history-timeline-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Right: Interactive Leaflet Map (Matching screenshot on page 6) -->
+          <div class="history-map-panel">
+            <div class="map-overlay-info">
+              <span>📍 Campus Map: RV University Area</span>
+            </div>
+            <div id="history-map"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 5: "WHERE SHOULD I LOOK FIRST?" ================= -->
+    <section id="view-smart-finder" class="app-view">
+      <div class="container">
+        <div class="smart-finder-card">
+          <div class="view-header" style="margin-bottom: 24px;">
+            <div class="spotlight-badge" style="background: var(--primary-light); color: var(--primary);">
+              ✨ Core Distinctive Feature
+            </div>
+            <h1 class="view-title">Where Should I Look First?</h1>
+            <p class="view-subtitle">
+              Analyzes previous memory logs and location history patterns to calculate where your lost item is most likely waiting for you.
+            </p>
+          </div>
+
+          <!-- Item Selector -->
+          <div class="item-select-banner">
+            <div>
+              <strong style="color: var(--secondary); font-size: 1rem;">Select Misplaced Item:</strong>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Choose which belonging you are currently searching for</p>
+            </div>
+            <select id="smart-finder-item-select" class="select-item-dropdown" onchange="runSmartSuggestions()">
+              <!-- Options populated by JS -->
+            </select>
+          </div>
+
+          <!-- Suggestion Results Output -->
+          <div id="smart-suggestion-results">
+            <!-- Dynamic statistical output -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 6: INSIGHTS ================= -->
+    <section id="view-insights" class="app-view">
+      <div class="container">
+        <div class="view-header">
+          <h1 class="view-title">Insights & Analytics</h1>
+          <p class="view-subtitle">Understand your misplacement patterns to form better memory habits.</p>
+        </div>
+
+        <div class="stats-overview-grid" id="insights-stats-grid">
+          <div class="stat-card primary">
+            <div class="stat-header">Total Belongings Tracked</div>
+            <div class="stat-value" id="stat-total-items">-</div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-header">Currently Misplaced</div>
+            <div class="stat-value" id="stat-missing-items">-</div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-header">Found & Recovered</div>
+            <div class="stat-value" id="stat-found-items">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header">Recovery Success Rate</div>
+            <div class="stat-value" id="stat-recovery-rate">-</div>
+          </div>
+        </div>
+
+        <div class="insights-content-grid">
+          <div class="insight-card">
+            <h3 class="insight-title">📍 Top Misplacement Hotspots</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+              Locations where items are most frequently forgotten on campus.
+            </p>
+            <ul class="hotspot-list" id="hotspots-list">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+
+          <div class="insight-card">
+            <h3 class="insight-title">🎒 Misplacement by Category</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+              Distribution of items logged across different categories.
+            </p>
+            <ul class="hotspot-list" id="categories-list">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- Modal 1: Update Location Modal -->
+  <div class="modal-backdrop" id="update-location-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Update Last Seen Location</h3>
+        <button class="btn-close-modal" onclick="closeModal('update-location-modal')">×</button>
+      </div>
+      <form id="update-location-form" onsubmit="handleUpdateLocationSubmit(event)">
+        <div class="modal-body">
+          <input type="hidden" id="update-item-id">
+          <div class="form-group">
+            <label class="form-label" for="update-loc-name">New Location *</label>
+            <input type="text" id="update-loc-name" class="form-input" placeholder="e.g. Classroom, Library, Cafeteria" required>
+            <div class="quick-locations">
+              <button type="button" class="location-chip" onclick="setQuickUpdateLoc('Classroom')">Classroom</button>
+              <button type="button" class="location-chip" onclick="setQuickUpdateLoc('Library')">Library</button>
+              <button type="button" class="location-chip" onclick="setQuickUpdateLoc('Cafeteria')">Cafeteria</button>
+              <button type="button" class="location-chip" onclick="setQuickUpdateLoc('Hostel')">Hostel</button>
+              <button type="button" class="location-chip" onclick="setQuickUpdateLoc('Home / Off-Campus')">Home</button>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="form-group">
+              <label class="form-label" for="update-loc-date">Date</label>
+              <input type="date" id="update-loc-date" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="update-loc-time">Time</label>
+              <input type="time" id="update-loc-time" class="form-input">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="update-loc-notes">Note</label>
+            <input type="text" id="update-loc-notes" class="form-input" placeholder="e.g. placed in backpack, left on bench">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('update-location-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Spot</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Mark As Found Modal -->
+  <div class="modal-backdrop" id="mark-found-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">🎉 Item Found & Recovered!</h3>
+        <button class="btn-close-modal" onclick="closeModal('mark-found-modal')">×</button>
+      </div>
+      <form id="mark-found-form" onsubmit="handleMarkFoundSubmit(event)">
+        <div class="modal-body">
+          <input type="hidden" id="mark-found-item-id">
+          <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 16px;">
+            Awesome news! Tell us where you found it so the <strong>Where Should I Look First?</strong> algorithm can learn from your recovery and give you even smarter advice next time!
+          </p>
+          <div class="form-group">
+            <label class="form-label" for="found-location-input">Where did you find it? *</label>
+            <input type="text" id="found-location-input" class="form-input" placeholder="e.g. Classroom, Hostel, Library desk" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="found-notes-input">Recovery Note (optional)</label>
+            <input type="text" id="found-notes-input" class="form-input" placeholder="e.g. slipped under desk chair, found by classmate">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('mark-found-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="background: var(--success);">Confirm Found</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: IP Project & Academic Assignment Info (from Assignment PDF) -->
+  <div class="modal-backdrop" id="ip-info-modal">
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Academic Assignment & IP Documentation</h3>
+        <button class="btn-close-modal" onclick="closeModal('ip-info-modal')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="ip-badge-banner">
+          <strong style="color: var(--primary); font-size: 1.1rem; display: block; margin-bottom: 4px;">
+            Last Seen – A Personal Lost-Item Memory Website
+          </strong>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">
+            Course: <strong>IP in Design</strong> • Academic Year: <strong>2026</strong> • RV University
+          </span>
+        </div>
+
+        <table class="ip-team-table">
+          <thead>
+            <tr>
+              <th>Sl. No.</th>
+              <th>USN</th>
+              <th>Name</th>
+              <th>Contribution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>1RUA24SCS0037</td>
+              <td><strong>Gedila Bimala</strong></td>
+              <td>UI/UX Design, Content &amp; Documentation</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>1RUA24SCS0011</td>
+              <td><strong>Archana BS</strong></td>
+              <td>Website Development, Functionality &amp; Research</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--secondary); margin-top: 14px; margin-bottom: 6px;">
+          Primary IP Protection: Copyright
+        </h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
+          Protects original UI/UX, dashboard layout, graphic composition, location-history presentation, and the proprietary <em>“Where Should I Look First?”</em> algorithmic interface under Literary &amp; Software Works (Indian Copyright Office &amp; WIPO guidelines).
+        </p>
+
+        <div style="background: var(--bg-alt); padding: 12px; border-radius: var(--radius-md); font-size: 0.82rem; color: var(--text-muted);">
+          <strong>Proposed Ownership:</strong> RVU (RV University), academic assignment 2026.
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button class="btn btn-secondary" onclick="resetToInitialData()" style="font-size: 0.8rem; color: #DC2626;">
+          ↺ Reset to Sample Data
+        </button>
+        <button class="btn btn-primary" onclick="closeModal('ip-info-modal')">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="/images/logo.svg" alt="Logo" width="24" height="24">
+          <span>Last Seen</span>
+          <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);">— Personal Lost-Item Memory Website</span>
+        </div>
+        <div class="footer-credits">
+          Developed by <strong>Team TraceMates</strong> (Archana BS &amp; Gedila Bimala) • RV University (2026)
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 Last Seen. Created for IP in Design Assignment. Ready for Render Deployment.</div>
+        <div>Protected under Copyright (Software / Literary Works)</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Leaflet JS for Campus Location Map -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Client Application Script -->
+  <script src="/js/app.js"></script>
+</body>
+</html>

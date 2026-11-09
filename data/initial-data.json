@@ -1,0 +1,232 @@
+{
+  "items": [
+    {
+      "id": "item-1",
+      "name": "Keys",
+      "category": "Keys & Keychains",
+      "status": "missing",
+      "lastLocation": "Classroom",
+      "latitude": 12.9238,
+      "longitude": 77.4987,
+      "lastSeenDate": "2024-09-11",
+      "lastSeenTime": "14:15",
+      "notes": "Silver keychain with RVU bike key and room 204 tag",
+      "imageUrl": "/images/keys.svg",
+      "history": [
+        {
+          "id": "h-1",
+          "location": "Classroom",
+          "date": "2024-09-11",
+          "time": "14:15",
+          "notes": "Left on 3rd row desk after IP in Design lecture",
+          "latitude": 12.9238,
+          "longitude": 77.4987
+        },
+        {
+          "id": "h-2",
+          "location": "Hostel",
+          "date": "2024-09-09",
+          "time": "08:30",
+          "notes": "Found on bedside nightstand",
+          "latitude": 12.9221,
+          "longitude": 77.4975
+        },
+        {
+          "id": "h-3",
+          "location": "Classroom",
+          "date": "2024-09-04",
+          "time": "16:00",
+          "notes": "Near teacher podium",
+          "latitude": 12.9238,
+          "longitude": 77.4987
+        },
+        {
+          "id": "h-4",
+          "location": "Library",
+          "date": "2024-08-28",
+          "time": "11:00",
+          "notes": "Reading room cubicle 5",
+          "latitude": 12.9249,
+          "longitude": 77.5002
+        },
+        {
+          "id": "h-5",
+          "location": "Classroom",
+          "date": "2024-08-20",
+          "time": "13:45",
+          "notes": "Left on seminar hall bench",
+          "latitude": 12.9238,
+          "longitude": 77.4987
+        }
+      ]
+    },
+    {
+      "id": "item-2",
+      "name": "Laptop",
+      "category": "Electronics & Laptops",
+      "status": "found",
+      "lastLocation": "Library",
+      "latitude": 12.9249,
+      "longitude": 77.5002,
+      "lastSeenDate": "2024-09-12",
+      "lastSeenTime": "10:30",
+      "notes": "Dell XPS 13 in gray sleeve with stickers",
+      "imageUrl": "/images/laptop.svg",
+      "history": [
+        {
+          "id": "h-6",
+          "location": "Library",
+          "date": "2024-09-12",
+          "time": "10:30",
+          "notes": "Ground floor reference section desk",
+          "latitude": 12.9249,
+          "longitude": 77.5002
+        },
+        {
+          "id": "h-7",
+          "location": "Hostel",
+          "date": "2024-09-07",
+          "time": "21:00",
+          "notes": "Charging on study table",
+          "latitude": 12.9221,
+          "longitude": 77.4975
+        },
+        {
+          "id": "h-8",
+          "location": "Library",
+          "date": "2024-08-30",
+          "time": "15:20",
+          "notes": "Left in silent study pod B2",
+          "latitude": 12.9249,
+          "longitude": 77.5002
+        }
+      ]
+    },
+    {
+      "id": "item-3",
+      "name": "Wallet",
+      "category": "Wallets & Purses",
+      "status": "missing",
+      "lastLocation": "Cafeteria",
+      "latitude": 12.9231,
+      "longitude": 77.4994,
+      "lastSeenDate": "2024-09-10",
+      "lastSeenTime": "13:20",
+      "notes": "Black leather bifold containing student ID and metro card",
+      "imageUrl": "/images/wallet.svg",
+      "history": [
+        {
+          "id": "h-9",
+          "location": "Cafeteria",
+          "date": "2024-09-10",
+          "time": "13:20",
+          "notes": "On juice counter table after lunch",
+          "latitude": 12.9231,
+          "longitude": 77.4994
+        },
+        {
+          "id": "h-10",
+          "location": "Cafeteria",
+          "date": "2024-09-02",
+          "time": "14:10",
+          "notes": "Food court corner table",
+          "latitude": 12.9231,
+          "longitude": 77.4994
+        },
+        {
+          "id": "h-11",
+          "location": "Hostel",
+          "date": "2024-08-25",
+          "time": "09:15",
+          "notes": "Jacket pocket in closet",
+          "latitude": 12.9221,
+          "longitude": 77.4975
+        }
+      ]
+    },
+    {
+      "id": "item-4",
+      "name": "Headphones",
+      "category": "Audio & Earphones",
+      "status": "missing",
+      "lastLocation": "Hostel",
+      "latitude": 12.9221,
+      "longitude": 77.4975,
+      "lastSeenDate": "2024-09-08",
+      "lastSeenTime": "18:45",
+      "notes": "White over-ear noise cancelling headphones in black zip case",
+      "imageUrl": "/images/headphones.svg",
+      "history": [
+        {
+          "id": "h-12",
+          "location": "Hostel",
+          "date": "2024-09-08",
+          "time": "18:45",
+          "notes": "Common lounge sofa",
+          "latitude": 12.9221,
+          "longitude": 77.4975
+        },
+        {
+          "id": "h-13",
+          "location": "Library",
+          "date": "2024-09-01",
+          "time": "17:30",
+          "notes": "2nd floor digital media room",
+          "latitude": 12.9249,
+          "longitude": 77.5002
+        },
+        {
+          "id": "h-14",
+          "location": "Hostel",
+          "date": "2024-08-22",
+          "time": "20:00",
+          "notes": "Bedside table",
+          "latitude": 12.9221,
+          "longitude": 77.4975
+        }
+      ]
+    },
+    {
+      "id": "item-5",
+      "name": "College ID Card",
+      "category": "ID Cards & Documents",
+      "status": "found",
+      "lastLocation": "Classroom",
+      "latitude": 12.9238,
+      "longitude": 77.4987,
+      "lastSeenDate": "2024-09-05",
+      "lastSeenTime": "11:15",
+      "notes": "RV University Smart Card with blue lanyard",
+      "imageUrl": "/images/idcard.svg",
+      "history": [
+        {
+          "id": "h-15",
+          "location": "Classroom",
+          "date": "2024-09-05",
+          "time": "11:15",
+          "notes": "Left on desk during lab session",
+          "latitude": 12.9238,
+          "longitude": 77.4987
+        },
+        {
+          "id": "h-16",
+          "location": "Library",
+          "date": "2024-08-29",
+          "time": "14:00",
+          "notes": "Entry turnstile desk",
+          "latitude": 12.9249,
+          "longitude": 77.5002
+        }
+      ]
+    }
+  ],
+  "knownLocations": [
+    { "name": "Classroom", "latitude": 12.9238, "longitude": 77.4987, "description": "Academic Block - Lecture Halls & Seminar Rooms" },
+    { "name": "Library", "latitude": 12.9249, "longitude": 77.5002, "description": "Central Campus Library & Reading Halls" },
+    { "name": "Cafeteria", "latitude": 12.9231, "longitude": 77.4994, "description": "Student Food Court & Dining Area" },
+    { "name": "Hostel", "latitude": 12.9221, "longitude": 77.4975, "description": "Residential Hostels & Study Lounges" },
+    { "name": "Computer Lab", "latitude": 12.9242, "longitude": 77.4981, "description": "CS Department Innovation Lab" },
+    { "name": "Sports Ground", "latitude": 12.9215, "longitude": 77.5015, "description": "Campus Arena & Outdoor Pavilion" },
+    { "name": "Home / Off-Campus", "latitude": 12.9280, "longitude": 77.4950, "description": "Personal Apartment / Residence" }
+  ]
+}
