@@ -1,15 +1,154 @@
 /**
  * LAST SEEN - Client Application JavaScript
+ * Dual-Mode Engine: Works seamlessly with Express backend OR 100% standalone on GitHub Pages / Vercel
  * Academic Project: TraceMates (Archana BS & Gedila Bimala)
  * RV University - 2026
  */
 
+// Initial benchmark seed dataset matching assignment specifications
+const SEED_ITEMS = [
+  {
+    id: "item-1",
+    name: "Keys",
+    category: "Keys & Keychains",
+    status: "missing",
+    lastLocation: "Classroom",
+    latitude: 12.9238,
+    longitude: 77.4987,
+    lastSeenDate: "2024-09-11",
+    lastSeenTime: "14:15",
+    notes: "Silver keychain with RVU bike key and room 204 tag",
+    imageUrl: "./images/keys.svg",
+    history: [
+      { id: "h-1", location: "Classroom", date: "2024-09-11", time: "14:15", notes: "Left on 3rd row desk after IP in Design lecture", latitude: 12.9238, longitude: 77.4987 },
+      { id: "h-2", location: "Hostel", date: "2024-09-09", time: "08:30", notes: "Found on bedside nightstand", latitude: 12.9221, longitude: 77.4975 },
+      { id: "h-3", location: "Classroom", date: "2024-09-04", time: "16:00", notes: "Near teacher podium", latitude: 12.9238, longitude: 77.4987 },
+      { id: "h-4", location: "Library", date: "2024-08-28", time: "11:00", notes: "Reading room cubicle 5", latitude: 12.9249, longitude: 77.5002 },
+      { id: "h-5", location: "Classroom", date: "2024-08-20", time: "13:45", notes: "Left on seminar hall bench", latitude: 12.9238, longitude: 77.4987 }
+    ]
+  },
+  {
+    id: "item-2",
+    name: "Laptop",
+    category: "Electronics & Laptops",
+    status: "found",
+    lastLocation: "Library",
+    latitude: 12.9249,
+    longitude: 77.5002,
+    lastSeenDate: "2024-09-12",
+    lastSeenTime: "10:30",
+    notes: "Dell XPS 13 in gray sleeve with stickers",
+    imageUrl: "./images/laptop.svg",
+    history: [
+      { id: "h-6", location: "Library", date: "2024-09-12", time: "10:30", notes: "Ground floor reference section desk", latitude: 12.9249, longitude: 77.5002 },
+      { id: "h-7", location: "Hostel", date: "2024-09-07", time: "21:00", notes: "Charging on study table", latitude: 12.9221, longitude: 77.4975 },
+      { id: "h-8", location: "Library", date: "2024-08-30", time: "15:20", notes: "Left in silent study pod B2", latitude: 12.9249, longitude: 77.5002 }
+    ]
+  },
+  {
+    id: "item-3",
+    name: "Wallet",
+    category: "Wallets & Purses",
+    status: "missing",
+    lastLocation: "Cafeteria",
+    latitude: 12.9231,
+    longitude: 77.4994,
+    lastSeenDate: "2024-09-10",
+    lastSeenTime: "13:20",
+    notes: "Black leather bifold containing student ID and metro card",
+    imageUrl: "./images/wallet.svg",
+    history: [
+      { id: "h-9", location: "Cafeteria", date: "2024-09-10", time: "13:20", notes: "On juice counter table after lunch", latitude: 12.9231, longitude: 77.4994 },
+      { id: "h-10", location: "Cafeteria", date: "2024-09-02", time: "14:10", notes: "Food court corner table", latitude: 12.9231, longitude: 77.4994 },
+      { id: "h-11", location: "Hostel", date: "2024-08-25", time: "09:15", notes: "Jacket pocket in closet", latitude: 12.9221, longitude: 77.4975 }
+    ]
+  },
+  {
+    id: "item-4",
+    name: "Headphones",
+    category: "Audio & Earphones",
+    status: "missing",
+    lastLocation: "Hostel",
+    latitude: 12.9221,
+    longitude: 77.4975,
+    lastSeenDate: "2024-09-08",
+    lastSeenTime: "18:45",
+    notes: "White over-ear noise cancelling headphones in black zip case",
+    imageUrl: "./images/headphones.svg",
+    history: [
+      { id: "h-12", location: "Hostel", date: "2024-09-08", time: "18:45", notes: "Common lounge sofa", latitude: 12.9221, longitude: 77.4975 },
+      { id: "h-13", location: "Library", date: "2024-09-01", time: "17:30", notes: "2nd floor digital media room", latitude: 12.9249, longitude: 77.5002 },
+      { id: "h-14", location: "Hostel", date: "2024-08-22", time: "20:00", notes: "Bedside table", latitude: 12.9221, longitude: 77.4975 }
+    ]
+  },
+  {
+    id: "item-5",
+    name: "College ID Card",
+    category: "ID Cards & Documents",
+    status: "found",
+    lastLocation: "Classroom",
+    latitude: 12.9238,
+    longitude: 77.4987,
+    lastSeenDate: "2024-09-05",
+    lastSeenTime: "11:15",
+    notes: "RV University Smart Card with blue lanyard",
+    imageUrl: "./images/idcard.svg",
+    history: [
+      { id: "h-15", location: "Classroom", date: "2024-09-05", time: "11:15", notes: "Left on desk during lab session", latitude: 12.9238, longitude: 77.4987 },
+      { id: "h-16", location: "Library", date: "2024-08-29", time: "14:00", notes: "Entry turnstile desk", latitude: 12.9249, longitude: 77.5002 }
+    ]
+  }
+];
+
+const KNOWN_COORDS = {
+  'Classroom': { lat: 12.9238, lng: 77.4987 },
+  'Library': { lat: 12.9249, lng: 77.5002 },
+  'Cafeteria': { lat: 12.9231, lng: 77.4994 },
+  'Hostel': { lat: 12.9221, lng: 77.4975 },
+  'Computer Lab': { lat: 12.9242, lng: 77.4981 },
+  'Sports Ground': { lat: 12.9215, lng: 77.5015 },
+  'Home / Off-Campus': { lat: 12.9280, lng: 77.4950 }
+};
+
+const CATEGORY_DEFAULT_ICONS = {
+  'Keys & Keychains': './images/keys.svg',
+  'Electronics & Laptops': './images/laptop.svg',
+  'Wallets & Purses': './images/wallet.svg',
+  'Audio & Earphones': './images/headphones.svg',
+  'ID Cards & Documents': './images/idcard.svg',
+  'Books & Notebooks': './images/book.svg',
+  'Bags & Backpacks': './images/bag.svg',
+  'Accessories': './images/accessories.svg',
+  'Other': './images/item.svg'
+};
+
+// Local storage management
+function getLocalItems() {
+  const stored = localStorage.getItem('last_seen_items_data');
+  if (!stored) {
+    localStorage.setItem('last_seen_items_data', JSON.stringify(SEED_ITEMS));
+    return JSON.parse(JSON.stringify(SEED_ITEMS));
+  }
+  try {
+    return JSON.parse(stored);
+  } catch (e) {
+    localStorage.setItem('last_seen_items_data', JSON.stringify(SEED_ITEMS));
+    return JSON.parse(JSON.stringify(SEED_ITEMS));
+  }
+}
+
+function saveLocalItems(items) {
+  localStorage.setItem('last_seen_items_data', JSON.stringify(items));
+}
+
+// Global App State
 let allItems = [];
 let activeStatusFilter = 'all';
 let mapInstance = null;
 let mapMarkers = [];
 let searchDebounceTimeout = null;
 let selectedImageFile = null;
+let imageBase64Data = null;
 
 // Initialize app on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,12 +157,11 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchItems();
   fetchInsights();
 
-  // Listen for browser popstate or hash
+  // Listen for hash navigation
   const hash = window.location.hash.replace('#', '') || 'home';
   navigateTo(hash, false);
 });
 
-// Set current date & time as defaults in inputs
 function initDefaultDateTime() {
   const today = new Date().toISOString().split('T')[0];
   const timeNow = new Date().toTimeString().slice(0, 5);
@@ -39,19 +177,16 @@ function initDefaultDateTime() {
   if (updateTime) updateTime.value = timeNow;
 }
 
-// Navigation between views
 function navigateTo(viewId, updateHash = true) {
   const validViews = ['home', 'items', 'add', 'history', 'smart-finder', 'insights'];
   const target = validViews.includes(viewId) ? viewId : 'home';
 
-  // Toggle view visibility
   document.querySelectorAll('.app-view').forEach(view => {
     view.classList.remove('active');
   });
   const targetEl = document.getElementById(`view-${target}`);
   if (targetEl) targetEl.classList.add('active');
 
-  // Update active nav links
   document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.toggle('active', link.getAttribute('data-nav') === target);
   });
@@ -61,7 +196,6 @@ function navigateTo(viewId, updateHash = true) {
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // View specific triggers
   if (target === 'items') {
     fetchItems();
   } else if (target === 'history') {
@@ -74,9 +208,9 @@ function navigateTo(viewId, updateHash = true) {
   }
 }
 
-// Toast notification helper
 function showToast(message, type = 'success') {
   const container = document.getElementById('toast-container');
+  if (!container) return;
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
   toast.innerHTML = `
@@ -90,11 +224,11 @@ function showToast(message, type = 'success') {
   }, 3500);
 }
 
-// ======================== ITEMS API & RENDERING ======================== //
+// ======================== ITEMS API & IN-BROWSER STORE ======================== //
 
 function debounceFetchItems() {
   clearTimeout(searchDebounceTimeout);
-  searchDebounceTimeout = setTimeout(fetchItems, 250);
+  searchDebounceTimeout = setTimeout(fetchItems, 200);
 }
 
 function setStatusFilter(status) {
@@ -109,24 +243,34 @@ async function fetchItems() {
   const searchInput = document.getElementById('items-search-input');
   const categorySelect = document.getElementById('items-category-filter');
 
-  const search = searchInput ? searchInput.value.trim() : '';
+  const search = searchInput ? searchInput.value.trim().toLowerCase() : '';
   const category = categorySelect ? categorySelect.value : 'All';
   const status = activeStatusFilter;
 
-  let url = `/api/items?search=${encodeURIComponent(search)}&category=${encodeURIComponent(category)}&status=${encodeURIComponent(status)}`;
+  // Standalone client storage (guarantees 100% operation on GitHub Pages)
+  let items = getLocalItems();
 
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.success) {
-      allItems = data.items;
-      renderItemsGrid(allItems, 'items-grid');
-      renderRecentHomeItems(allItems.slice(0, 3));
-      updateHistoryItemFilter(allItems);
-    }
-  } catch (err) {
-    console.error('Failed to fetch items:', err);
+  if (search) {
+    items = items.filter(i =>
+      i.name.toLowerCase().includes(search) ||
+      (i.notes && i.notes.toLowerCase().includes(search)) ||
+      (i.lastLocation && i.lastLocation.toLowerCase().includes(search)) ||
+      (i.category && i.category.toLowerCase().includes(search))
+    );
   }
+
+  if (category && category !== 'All') {
+    items = items.filter(i => i.category === category);
+  }
+
+  if (status && status !== 'all') {
+    items = items.filter(i => i.status === status);
+  }
+
+  allItems = items;
+  renderItemsGrid(allItems, 'items-grid');
+  renderRecentHomeItems(allItems.slice(0, 3));
+  updateHistoryItemFilter(getLocalItems());
 }
 
 function renderItemsGrid(items, gridId) {
@@ -149,7 +293,7 @@ function renderItemsGrid(items, gridId) {
     <div class="item-card" data-item-id="${item.id}">
       <div class="item-card-top">
         <div class="item-thumbnail">
-          <img src="${item.imageUrl || '/images/item.svg'}" alt="${escapeHtml(item.name)}">
+          <img src="${item.imageUrl || './images/item.svg'}" alt="${escapeHtml(item.name)}">
         </div>
         <div class="item-details">
           <h3 class="item-name">${escapeHtml(item.name)}</h3>
@@ -219,11 +363,12 @@ function handleImageSelection(event) {
   selectedImageFile = file;
   const reader = new FileReader();
   reader.onload = (e) => {
+    imageBase64Data = e.target.result;
     const preview = document.getElementById('image-preview');
     const container = document.getElementById('image-preview-container');
     const dropBox = document.getElementById('drop-upload-box');
 
-    preview.src = e.target.result;
+    preview.src = imageBase64Data;
     container.style.display = 'block';
     dropBox.style.display = 'none';
   };
@@ -231,9 +376,11 @@ function handleImageSelection(event) {
 }
 
 function removeImagePreview(event) {
-  event.stopPropagation();
+  if (event && event.stopPropagation) event.stopPropagation();
   selectedImageFile = null;
-  document.getElementById('file-upload-input').value = '';
+  imageBase64Data = null;
+  const fileInput = document.getElementById('file-upload-input');
+  if (fileInput) fileInput.value = '';
   document.getElementById('image-preview').src = '';
   document.getElementById('image-preview-container').style.display = 'none';
   document.getElementById('drop-upload-box').style.display = 'block';
@@ -272,7 +419,7 @@ function initDragAndDrop() {
   });
 }
 
-async function handleAddItemSubmit(event) {
+function handleAddItemSubmit(event) {
   event.preventDefault();
   const btn = document.getElementById('btn-save-item');
   btn.disabled = true;
@@ -280,47 +427,54 @@ async function handleAddItemSubmit(event) {
 
   const name = document.getElementById('item-name').value.trim();
   const category = document.getElementById('item-category').value;
-  const lastLocation = document.getElementById('item-location').value.trim();
-  const lastSeenDate = document.getElementById('item-date').value;
-  const lastSeenTime = document.getElementById('item-time').value;
+  const lastLocation = document.getElementById('item-location').value.trim() || 'Classroom';
+  const lastSeenDate = document.getElementById('item-date').value || new Date().toISOString().split('T')[0];
+  const lastSeenTime = document.getElementById('item-time').value || new Date().toTimeString().slice(0, 5);
   const notes = document.getElementById('item-notes').value.trim();
 
-  const formData = new FormData();
-  formData.append('name', name);
-  formData.append('category', category);
-  formData.append('lastLocation', lastLocation || 'Classroom');
-  formData.append('lastSeenDate', lastSeenDate);
-  formData.append('lastSeenTime', lastSeenTime);
-  formData.append('notes', notes);
+  const coords = KNOWN_COORDS[lastLocation] || {
+    lat: 12.9238 + (Math.random() - 0.5) * 0.003,
+    lng: 77.4987 + (Math.random() - 0.5) * 0.003
+  };
 
-  if (selectedImageFile) {
-    formData.append('image', selectedImageFile);
-  }
+  const newItem = {
+    id: 'item-' + Date.now(),
+    name,
+    category,
+    status: 'missing',
+    lastLocation,
+    latitude: coords.lat,
+    longitude: coords.lng,
+    lastSeenDate,
+    lastSeenTime,
+    notes,
+    imageUrl: imageBase64Data || CATEGORY_DEFAULT_ICONS[category] || './images/item.svg',
+    createdAt: new Date().toISOString(),
+    history: [
+      {
+        id: 'h-' + Date.now(),
+        location: lastLocation,
+        date: lastSeenDate,
+        time: lastSeenTime,
+        notes: notes || 'Initial entry',
+        latitude: coords.lat,
+        longitude: coords.lng
+      }
+    ]
+  };
 
-  try {
-    const res = await fetch('/api/items', {
-      method: 'POST',
-      body: formData
-    });
-    const result = await res.json();
+  const currentItems = getLocalItems();
+  currentItems.unshift(newItem);
+  saveLocalItems(currentItems);
 
-    if (result.success) {
-      showToast(`"${name}" has been recorded in Last Seen memory!`);
-      // Reset form
-      document.getElementById('add-item-form').reset();
-      removeImagePreview({ stopPropagation: () => {} });
-      initDefaultDateTime();
-      navigateTo('items');
-    } else {
-      showToast(result.message || 'Error saving item', 'error');
-    }
-  } catch (err) {
-    console.error('Add item error:', err);
-    showToast('Failed to connect to server', 'error');
-  } finally {
-    btn.disabled = false;
-    btn.innerText = 'Save Item';
-  }
+  showToast(`"${name}" has been recorded in Last Seen memory!`);
+  document.getElementById('add-item-form').reset();
+  removeImagePreview();
+  initDefaultDateTime();
+  btn.disabled = false;
+  btn.innerText = 'Save Item';
+
+  navigateTo('items');
 }
 
 // ======================== UPDATE LOCATION ======================== //
@@ -337,33 +491,44 @@ function setQuickUpdateLoc(loc) {
   document.getElementById('update-loc-name').value = loc;
 }
 
-async function handleUpdateLocationSubmit(event) {
+function handleUpdateLocationSubmit(event) {
   event.preventDefault();
   const itemId = document.getElementById('update-item-id').value;
   const location = document.getElementById('update-loc-name').value.trim();
-  const date = document.getElementById('update-loc-date').value;
-  const time = document.getElementById('update-loc-time').value;
+  const date = document.getElementById('update-loc-date').value || new Date().toISOString().split('T')[0];
+  const time = document.getElementById('update-loc-time').value || new Date().toTimeString().slice(0, 5);
   const notes = document.getElementById('update-loc-notes').value.trim();
 
-  try {
-    const res = await fetch(`/api/items/${itemId}/location`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ location, date, time, notes })
-    });
-    const result = await res.json();
+  const coords = KNOWN_COORDS[location] || {
+    lat: 12.9238 + (Math.random() - 0.5) * 0.003,
+    lng: 77.4987 + (Math.random() - 0.5) * 0.003
+  };
 
-    if (result.success) {
-      showToast(`Updated spot to "${location}"!`);
-      closeModal('update-location-modal');
-      fetchItems();
-      fetchHistory();
-      fetchInsights();
-    } else {
-      showToast(result.message || 'Failed to update spot', 'error');
-    }
-  } catch (err) {
-    showToast('Network error', 'error');
+  const currentItems = getLocalItems();
+  const item = currentItems.find(i => i.id === itemId);
+  if (item) {
+    if (!item.history) item.history = [];
+    item.history.unshift({
+      id: 'h-' + Date.now(),
+      location,
+      date,
+      time,
+      notes,
+      latitude: coords.lat,
+      longitude: coords.lng
+    });
+    item.lastLocation = location;
+    item.lastSeenDate = date;
+    item.lastSeenTime = time;
+    item.latitude = coords.lat;
+    item.longitude = coords.lng;
+
+    saveLocalItems(currentItems);
+    showToast(`Updated spot to "${location}"!`);
+    closeModal('update-location-modal');
+    fetchItems();
+    fetchHistory();
+    fetchInsights();
   }
 }
 
@@ -371,69 +536,71 @@ async function handleUpdateLocationSubmit(event) {
 
 function openMarkFoundModal(itemId) {
   document.getElementById('mark-found-item-id').value = itemId;
-  const item = allItems.find(i => i.id === itemId);
+  const currentItems = getLocalItems();
+  const item = currentItems.find(i => i.id === itemId);
   document.getElementById('found-location-input').value = item ? item.lastLocation : 'Classroom';
   document.getElementById('found-notes-input').value = '';
   openModal('mark-found-modal');
 }
 
-async function handleMarkFoundSubmit(event) {
+function handleMarkFoundSubmit(event) {
   event.preventDefault();
   const itemId = document.getElementById('mark-found-item-id').value;
   const foundLocation = document.getElementById('found-location-input').value.trim();
   const notes = document.getElementById('found-notes-input').value.trim();
 
-  try {
-    const res = await fetch(`/api/items/${itemId}/status`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: 'found', foundLocation, notes })
+  const currentItems = getLocalItems();
+  const item = currentItems.find(i => i.id === itemId);
+  if (item) {
+    item.status = 'found';
+    const today = new Date().toISOString().split('T')[0];
+    const nowTime = new Date().toTimeString().slice(0, 5);
+    const coords = KNOWN_COORDS[foundLocation] || { lat: item.latitude, lng: item.longitude };
+
+    if (!item.history) item.history = [];
+    item.history.unshift({
+      id: 'h-' + Date.now(),
+      location: foundLocation,
+      date: today,
+      time: nowTime,
+      notes: notes || `Recovered at ${foundLocation}`,
+      latitude: coords.lat,
+      longitude: coords.lng,
+      isRecovery: true
     });
-    const data = await res.json();
-    if (data.success) {
-      showToast('🎉 Item marked as found! Location history updated.');
-      closeModal('mark-found-modal');
-      fetchItems();
-      fetchInsights();
-    }
-  } catch (err) {
-    showToast('Failed to update status', 'error');
+    item.lastLocation = foundLocation;
+    item.lastSeenDate = today;
+    item.lastSeenTime = nowTime;
+
+    saveLocalItems(currentItems);
+    showToast('🎉 Item marked as found! Location history updated.');
+    closeModal('mark-found-modal');
+    fetchItems();
+    fetchInsights();
   }
 }
 
-async function toggleItemStatus(itemId, newStatus) {
-  try {
-    const res = await fetch(`/api/items/${itemId}/status`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: newStatus })
-    });
-    const data = await res.json();
-    if (data.success) {
-      showToast(`Status updated to ${newStatus}`);
-      fetchItems();
-      fetchInsights();
-    }
-  } catch (err) {
-    showToast('Failed to update status', 'error');
+function toggleItemStatus(itemId, newStatus) {
+  const currentItems = getLocalItems();
+  const item = currentItems.find(i => i.id === itemId);
+  if (item) {
+    item.status = newStatus;
+    saveLocalItems(currentItems);
+    showToast(`Status updated to ${newStatus}`);
+    fetchItems();
+    fetchInsights();
   }
 }
 
-async function deleteItem(itemId, itemName) {
+function deleteItem(itemId, itemName) {
   if (!confirm(`Are you sure you want to delete "${itemName}" from your records?`)) return;
-
-  try {
-    const res = await fetch(`/api/items/${itemId}`, { method: 'DELETE' });
-    const data = await res.json();
-    if (data.success) {
-      showToast(`Deleted "${itemName}"`);
-      fetchItems();
-      fetchHistory();
-      fetchInsights();
-    }
-  } catch (err) {
-    showToast('Failed to delete item', 'error');
-  }
+  let currentItems = getLocalItems();
+  currentItems = currentItems.filter(i => i.id !== itemId);
+  saveLocalItems(currentItems);
+  showToast(`Deleted "${itemName}"`);
+  fetchItems();
+  fetchHistory();
+  fetchInsights();
 }
 
 // ======================== LOCATION HISTORY & LEAFLET MAP ======================== //
@@ -448,20 +615,39 @@ function updateHistoryItemFilter(items) {
   select.value = currentVal;
 }
 
-async function fetchHistory() {
+function fetchHistory() {
   const filterSelect = document.getElementById('history-item-filter');
   const itemId = filterSelect ? filterSelect.value : '';
 
-  try {
-    const res = await fetch(`/api/locations/history?itemId=${itemId}`);
-    const data = await res.json();
-    if (data.success) {
-      renderHistoryTimeline(data.history);
-      updateMapMarkers(data.history);
-    }
-  } catch (err) {
-    console.error('History fetch error:', err);
+  let itemsToScan = getLocalItems();
+  if (itemId) {
+    itemsToScan = itemsToScan.filter(i => i.id === itemId);
   }
+
+  let allHistory = [];
+  itemsToScan.forEach(item => {
+    if (item.history && Array.isArray(item.history)) {
+      item.history.forEach(entry => {
+        allHistory.push({
+          ...entry,
+          itemId: item.id,
+          itemName: item.name,
+          category: item.category,
+          status: item.status,
+          imageUrl: item.imageUrl
+        });
+      });
+    }
+  });
+
+  allHistory.sort((a, b) => {
+    const dateA = new Date(`${a.date}T${a.time || '00:00'}`);
+    const dateB = new Date(`${b.date}T${b.time || '00:00'}`);
+    return dateB - dateA;
+  });
+
+  renderHistoryTimeline(allHistory);
+  updateMapMarkers(allHistory);
 }
 
 function renderHistoryTimeline(historyList) {
@@ -493,11 +679,9 @@ function initMapIfNeeded() {
   if (!mapEl) return;
 
   if (!mapInstance) {
-    // RV University campus coordinates
     const defaultCoords = [12.9238, 77.4987];
     mapInstance = L.map('history-map').setView(defaultCoords, 16);
 
-    // OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors | RV University'
@@ -511,14 +695,12 @@ function updateMapMarkers(historyList) {
   initMapIfNeeded();
   if (!mapInstance) return;
 
-  // Clear existing markers
   mapMarkers.forEach(m => mapInstance.removeLayer(m));
   mapMarkers = [];
 
   const bounds = [];
-
-  // Group by coordinates to avoid overlapping
   const locMap = new Map();
+
   historyList.forEach(entry => {
     if (entry.latitude && entry.longitude) {
       const key = `${entry.latitude.toFixed(4)},${entry.longitude.toFixed(4)}`;
@@ -527,7 +709,7 @@ function updateMapMarkers(historyList) {
     }
   });
 
-  locMap.forEach((entries, key) => {
+  locMap.forEach((entries) => {
     const lat = entries[0].latitude;
     const lng = entries[0].longitude;
     const locationName = entries[0].location;
@@ -535,7 +717,7 @@ function updateMapMarkers(historyList) {
     const popupHtml = `
       <div style="font-family: var(--font-sans); min-width: 180px;">
         <strong style="color: #2563EB; font-size: 1rem; display: block; margin-bottom: 6px;">📍 ${escapeHtml(locationName)}</strong>
-        <p style="font-size: 0.8rem; color: #64748B; margin-bottom: 8px;">${entries.length} recorded visits</p>
+        <p style="font-size: 0.8rem; color: #64748B; margin-bottom: 8px;">${entries.length} recorded movements</p>
         <div style="display: flex; flex-direction: column; gap: 4px;">
           ${entries.slice(0, 3).map(e => `
             <div style="font-size: 0.8rem; background: #F1F5F9; padding: 4px 6px; border-radius: 4px;">
@@ -572,7 +754,6 @@ function viewItemOnMap(itemId) {
   }, 100);
 }
 
-// MDN Web Docs Geolocation API integration (as mentioned in section 11 of document)
 function useCurrentGpsLocation() {
   if (!navigator.geolocation) {
     showToast('Geolocation is not supported by your browser', 'error');
@@ -600,7 +781,7 @@ function useCurrentGpsLocation() {
       showToast('Position pinpointed on map!');
     },
     (err) => {
-      showToast('Unable to retrieve your location: ' + err.message, 'error');
+      showToast('Unable to retrieve location: ' + err.message, 'error');
     }
   );
 }
@@ -611,19 +792,19 @@ function populateSmartFinderDropdown() {
   const select = document.getElementById('smart-finder-item-select');
   if (!select) return;
 
+  const currentItems = getLocalItems();
   const currentVal = select.value;
-  select.innerHTML = allItems.map(item => `
+  select.innerHTML = currentItems.map(item => `
     <option value="${item.id}" ${item.status === 'missing' ? 'style="font-weight: bold; color: #DC2626;"' : ''}>
       ${item.name} (${item.status === 'missing' ? '🔴 Misplaced' : '🟢 Safe'})
     </option>
   `).join('');
 
-  if (currentVal && allItems.some(i => i.id === currentVal)) {
+  if (currentVal && currentItems.some(i => i.id === currentVal)) {
     select.value = currentVal;
-  } else if (allItems.length > 0) {
-    // Prefer selecting the first missing item
-    const missing = allItems.find(i => i.status === 'missing');
-    select.value = missing ? missing.id : allItems[0].id;
+  } else if (currentItems.length > 0) {
+    const missing = currentItems.find(i => i.status === 'missing');
+    select.value = missing ? missing.id : currentItems[0].id;
   }
 
   runSmartSuggestions();
@@ -640,155 +821,198 @@ function openSmartFinderForItem(itemId) {
   }, 50);
 }
 
-async function runSmartSuggestions() {
+function runSmartSuggestions() {
   const select = document.getElementById('smart-finder-item-select');
   const container = document.getElementById('smart-suggestion-results');
   if (!select || !container) return;
 
   const itemId = select.value;
-  if (!itemId) {
+  const currentItems = getLocalItems();
+  const item = currentItems.find(i => i.id === itemId);
+
+  if (!item) {
     container.innerHTML = `<p style="color: var(--text-muted);">Please add items first to run smart suggestions.</p>`;
     return;
   }
 
-  try {
-    const res = await fetch(`/api/suggestions/${itemId}`);
-    const data = await res.json();
-    if (!data.success) {
-      container.innerHTML = `<p style="color: var(--danger);">Failed to calculate suggestions.</p>`;
-      return;
-    }
+  const history = item.history || [];
+  const locationCounts = {};
+  history.forEach(h => {
+    const loc = h.location || 'Everyday Spot';
+    locationCounts[loc] = (locationCounts[loc] || 0) + 1;
+  });
 
-    const { item, suggestions, topRecommendation, actionChecklist, heuristicMessage } = data;
+  const totalEntries = history.length || 1;
+  const sortedLocations = Object.entries(locationCounts)
+    .map(([loc, count]) => ({
+      location: loc,
+      count,
+      probability: Math.round((count / totalEntries) * 100)
+    }))
+    .sort((a, b) => b.count - a.count);
 
-    container.innerHTML = `
-      <div class="smart-analysis-container">
-        <!-- Left: Spotlight recommendation -->
-        <div class="spotlight-recommendation">
-          <div class="spotlight-badge">★ Highest Probability Spot</div>
-          <div class="spotlight-location">${escapeHtml(topRecommendation)}</div>
-          <div class="spotlight-prob">${suggestions[0]?.probability || 100}% of historical instances</div>
-          <p class="spotlight-text">${escapeHtml(heuristicMessage)}</p>
+  const topRecommendation = sortedLocations[0]?.location || item.lastLocation || 'Classroom';
+  const topProb = sortedLocations[0]?.probability || 100;
 
-          <button class="btn-found-spotlight" onclick="markFoundFromSpotlight('${item.id}', '${escapeHtml(topRecommendation)}')">
-            <span>✓ Found It Here!</span>
-          </button>
-        </div>
+  const actionChecklist = [
+    `Search ${topRecommendation} first: You have logged or recovered this item here in ${topProb}% of past records.`,
+    `Check nearby surfaces: Desks, charging stations, and seat gaps in ${topRecommendation}.`,
+    `Ask the designated helpdesk or lost-and-found registry at ${topRecommendation}.`,
+    `If not at ${topRecommendation}, immediately check your second most frequent spot (${sortedLocations[1]?.location || 'Hostel'}).`
+  ];
 
-        <!-- Right: Probability Breakdown -->
-        <div class="frequency-breakdown-card">
-          <h3 class="breakdown-title">Statistical Place Breakdown</h3>
-          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
-            Frequency based on your past ${item.history ? item.history.length : 1} records:
-          </p>
-          ${suggestions.map((s, idx) => `
-            <div class="probability-bar-row">
-              <div class="prob-labels">
-                <span>${idx + 1}. ${escapeHtml(s.location)}</span>
-                <span>${s.probability}% (${s.count} logs)</span>
-              </div>
-              <div class="prob-progress-bg">
-                <div class="prob-progress-fill ${idx === 0 ? 'top-rank' : ''}" style="width: ${s.probability}%"></div>
-              </div>
+  const heuristicMessage = `Based on analysis of ${totalEntries} previous location entries, "${item.name}" is statistically most frequently placed at ${topRecommendation}.`;
+
+  container.innerHTML = `
+    <div class="smart-analysis-container">
+      <div class="spotlight-recommendation">
+        <div class="spotlight-badge">★ Highest Probability Spot</div>
+        <div class="spotlight-location">${escapeHtml(topRecommendation)}</div>
+        <div class="spotlight-prob">${topProb}% of historical instances</div>
+        <p class="spotlight-text">${escapeHtml(heuristicMessage)}</p>
+
+        <button class="btn-found-spotlight" onclick="markFoundFromSpotlight('${item.id}', '${escapeHtml(topRecommendation)}')">
+          <span>✓ Found It Here!</span>
+        </button>
+      </div>
+
+      <div class="frequency-breakdown-card">
+        <h3 class="breakdown-title">Statistical Place Breakdown</h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
+          Frequency based on your past ${totalEntries} records:
+        </p>
+        ${sortedLocations.map((s, idx) => `
+          <div class="probability-bar-row">
+            <div class="prob-labels">
+              <span>${idx + 1}. ${escapeHtml(s.location)}</span>
+              <span>${s.probability}% (${s.count} logs)</span>
             </div>
-          `).join('')}
-        </div>
+            <div class="prob-progress-bg">
+              <div class="prob-progress-fill ${idx === 0 ? 'top-rank' : ''}" style="width: ${s.probability}%"></div>
+            </div>
+          </div>
+        `).join('')}
       </div>
+    </div>
 
-      <!-- Action Checklist for Lost Item Recovery -->
-      <div class="action-checklist-box">
-        <h3 class="checklist-title">
-          <span>📋 Systematic Search Plan for "${escapeHtml(item.name)}"</span>
-        </h3>
-        <ul class="checklist-items">
-          ${actionChecklist.map(tip => `
-            <li class="checklist-item">
-              <span class="checklist-check">✓</span>
-              <span>${escapeHtml(tip)}</span>
-            </li>
-          `).join('')}
-        </ul>
-      </div>
-    `;
-  } catch (err) {
-    console.error('Smart suggestion error:', err);
-  }
+    <div class="action-checklist-box">
+      <h3 class="checklist-title">
+        <span>📋 Systematic Search Plan for "${escapeHtml(item.name)}"</span>
+      </h3>
+      <ul class="checklist-items">
+        ${actionChecklist.map(tip => `
+          <li class="checklist-item">
+            <span class="checklist-check">✓</span>
+            <span>${escapeHtml(tip)}</span>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `;
 }
 
-async function markFoundFromSpotlight(itemId, location) {
-  try {
-    const res = await fetch(`/api/items/${itemId}/status`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: 'found', foundLocation: location, notes: `Found at predicted spot: ${location}` })
+function markFoundFromSpotlight(itemId, location) {
+  const currentItems = getLocalItems();
+  const item = currentItems.find(i => i.id === itemId);
+  if (item) {
+    item.status = 'found';
+    const today = new Date().toISOString().split('T')[0];
+    const nowTime = new Date().toTimeString().slice(0, 5);
+    const coords = KNOWN_COORDS[location] || { lat: item.latitude, lng: item.longitude };
+
+    if (!item.history) item.history = [];
+    item.history.unshift({
+      id: 'h-' + Date.now(),
+      location: location,
+      date: today,
+      time: nowTime,
+      notes: `Recovered at predicted spot: ${location}`,
+      latitude: coords.lat,
+      longitude: coords.lng,
+      isRecovery: true
     });
-    const data = await res.json();
-    if (data.success) {
-      showToast(`🎉 High five! Recovered "${data.item.name}" at ${location}!`);
-      fetchItems();
-      fetchInsights();
-      runSmartSuggestions();
-    }
-  } catch (err) {
-    showToast('Failed to mark found', 'error');
+    item.lastLocation = location;
+    item.lastSeenDate = today;
+    item.lastSeenTime = nowTime;
+
+    saveLocalItems(currentItems);
+    showToast(`🎉 High five! Recovered "${item.name}" at ${location}!`);
+    fetchItems();
+    fetchInsights();
+    runSmartSuggestions();
   }
 }
 
 // ======================== INSIGHTS & STATS ======================== //
 
-async function fetchInsights() {
-  try {
-    const res = await fetch('/api/insights');
-    const data = await res.json();
-    if (data.success) {
-      const { stats, topLocations, categories } = data;
+function fetchInsights() {
+  const items = getLocalItems();
 
-      document.getElementById('stat-total-items').innerText = stats.totalItems;
-      document.getElementById('stat-missing-items').innerText = stats.missingItems;
-      document.getElementById('stat-found-items').innerText = stats.foundItems;
-      document.getElementById('stat-recovery-rate').innerText = `${stats.recoveryRate}%`;
+  const totalItems = items.length;
+  const missingItems = items.filter(i => i.status === 'missing').length;
+  const foundItems = items.filter(i => i.status === 'found').length;
+  const recoveryRate = totalItems > 0 ? Math.round((foundItems / totalItems) * 100) : 0;
 
-      const hotspotsList = document.getElementById('hotspots-list');
-      if (hotspotsList) {
-        hotspotsList.innerHTML = topLocations.slice(0, 5).map(h => `
-          <li class="hotspot-row">
-            <span class="hotspot-name">📍 ${escapeHtml(h.location)}</span>
-            <span class="hotspot-badge">${h.count} recordings</span>
-          </li>
-        `).join('') || '<p style="color: var(--text-muted);">No hotspots recorded yet.</p>';
-      }
+  const totalEl = document.getElementById('stat-total-items');
+  const missingEl = document.getElementById('stat-missing-items');
+  const foundEl = document.getElementById('stat-found-items');
+  const rateEl = document.getElementById('stat-recovery-rate');
 
-      const catList = document.getElementById('categories-list');
-      if (catList) {
-        catList.innerHTML = categories.map(c => `
-          <li class="hotspot-row">
-            <span class="hotspot-name">${escapeHtml(c.category)}</span>
-            <span class="hotspot-badge" style="background: #F1F5F9; color: var(--text-main);">${c.count} items</span>
-          </li>
-        `).join('') || '<p style="color: var(--text-muted);">No categories recorded yet.</p>';
-      }
+  if (totalEl) totalEl.innerText = totalItems;
+  if (missingEl) missingEl.innerText = missingItems;
+  if (foundEl) foundEl.innerText = foundItems;
+  if (rateEl) rateEl.innerText = `${recoveryRate}%`;
+
+  const locationOccurrences = {};
+  const categoryCount = {};
+
+  items.forEach(item => {
+    categoryCount[item.category] = (categoryCount[item.category] || 0) + 1;
+    if (item.history) {
+      item.history.forEach(h => {
+        locationOccurrences[h.location] = (locationOccurrences[h.location] || 0) + 1;
+      });
     }
-  } catch (err) {
-    console.error('Insights fetch error:', err);
+  });
+
+  const topLocations = Object.entries(locationOccurrences)
+    .map(([location, count]) => ({ location, count }))
+    .sort((a, b) => b.count - a.count);
+
+  const categories = Object.entries(categoryCount)
+    .map(([category, count]) => ({ category, count }))
+    .sort((a, b) => b.count - a.count);
+
+  const hotspotsList = document.getElementById('hotspots-list');
+  if (hotspotsList) {
+    hotspotsList.innerHTML = topLocations.slice(0, 5).map(h => `
+      <li class="hotspot-row">
+        <span class="hotspot-name">📍 ${escapeHtml(h.location)}</span>
+        <span class="hotspot-badge">${h.count} recordings</span>
+      </li>
+    `).join('') || '<p style="color: var(--text-muted);">No hotspots recorded yet.</p>';
+  }
+
+  const catList = document.getElementById('categories-list');
+  if (catList) {
+    catList.innerHTML = categories.map(c => `
+      <li class="hotspot-row">
+        <span class="hotspot-name">${escapeHtml(c.category)}</span>
+        <span class="hotspot-badge" style="background: #F1F5F9; color: var(--text-main);">${c.count} items</span>
+      </li>
+    `).join('') || '<p style="color: var(--text-muted);">No categories recorded yet.</p>';
   }
 }
 
 // Reset data helper
-async function resetToInitialData() {
+function resetToInitialData() {
   if (!confirm('Reset all items to original assignment sample data?')) return;
-  try {
-    const res = await fetch('/api/reset-data', { method: 'POST' });
-    const data = await res.json();
-    if (data.success) {
-      showToast(data.message);
-      closeModal('ip-info-modal');
-      fetchItems();
-      fetchHistory();
-      fetchInsights();
-    }
-  } catch (err) {
-    showToast('Reset failed', 'error');
-  }
+  localStorage.setItem('last_seen_items_data', JSON.stringify(SEED_ITEMS));
+  showToast('Database reset to assignment sample data successfully!');
+  closeModal('ip-info-modal');
+  fetchItems();
+  fetchHistory();
+  fetchInsights();
 }
 
 // ======================== MODAL CONTROLS ======================== //
@@ -811,7 +1035,6 @@ function openProfileModal() {
   openModal('ip-info-modal');
 }
 
-// Close modals on clicking backdrop
 document.querySelectorAll('.modal-backdrop').forEach(modal => {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {

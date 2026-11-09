@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <circle cx="40" cy="40" r="38" fill="#E0F2FE"/>
+  <!-- Laptop screen -->
+  <rect x="22" y="24" width="36" height="24" rx="2" fill="#0284C7"/>
+  <rect x="25" y="27" width="30" height="18" rx="1" fill="#BAE6FD"/>
+  <circle cx="40" cy="36" r="3" fill="#0284C7"/>
+  <!-- Laptop base -->
+  <path d="M16 52C16 50.8954 16.8954 50 18 50H62C63.1046 50 64 50.8954 64 52L61 56H19L16 52Z" fill="#0369A1"/>
+  <rect x="36" y="51" width="8" height="2" rx="1" fill="#E0F2FE"/>
+</svg>

@@ -2,7 +2,8 @@
 
 > **"Find What Matters — Keep track of your belongings, check their last seen location and get smart suggestions on where to look first."**
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Archana4413/LastSeen)
+### 🌐 Live Deployment:
+👉 **[https://archana4413.github.io/LastSeen/](https://archana4413.github.io/LastSeen/)**
 
 An intelligent, personal lost-item tracking and memory website designed to solve the everyday problem of misplacing belongings (keys, laptop, wallet, earphones, ID cards, books) on campus or at home.
 

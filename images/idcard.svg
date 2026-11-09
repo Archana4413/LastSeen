@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <circle cx="40" cy="40" r="38" fill="#ECFDF5"/>
+  <!-- Lanyard clip -->
+  <path d="M40 18L40 26" stroke="#059669" stroke-width="4" stroke-linecap="round"/>
+  <!-- Card badge -->
+  <rect x="24" y="26" width="32" height="38" rx="3" fill="#10B981"/>
+  <rect x="27" y="29" width="26" height="32" rx="2" fill="#FFFFFF"/>
+  <!-- Photo placeholder -->
+  <circle cx="34" cy="38" r="4" fill="#059669"/>
+  <path d="M29 47C29 44 32 43 34 43C36 43 39 44 39 47" fill="#059669"/>
+  <!-- Lines -->
+  <rect x="42" cy="35" width="8" height="2" rx="1" fill="#9CA3AF"/>
+  <rect x="42" cy="39" width="8" height="2" rx="1" fill="#9CA3AF"/>
+  <rect x="30" cy="52" width="20" height="2" rx="1" fill="#D1D5DB"/>
+  <rect x="30" cy="56" width="14" height="2" rx="1" fill="#D1D5DB"/>
+</svg>
